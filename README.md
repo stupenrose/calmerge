@@ -3,7 +3,7 @@ A simple webapp that merges multiple iCal feeds into one
 
 # configuration
 
-Edit the list of urls in [CalMerge.scala](blob/master/src/main/scala/us/penrose/calmerge/CalMerge.scala)
+Edit the list of urls in [CalMerge.scala](src/main/scala/us/penrose/calmerge/CalMerge.scala)
 
 # local deploy
 
