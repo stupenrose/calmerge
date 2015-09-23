@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link href='/fullcalendar.min.css' rel='stylesheet' />
+<link href='/fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='/lib/moment.min.js'></script>
+<script src='/lib/jquery.min.js'></script>
+<script src='/fullcalendar.min.js'></script>
+<script src='/fullcalendar.min.js'></script>
+
+<script src='/ical.min.js'></script>
+<script>
+
+    function translateICalToFullcalendarJSON(data){
+
+		var events = [];
+		var jcalData = ICAL.parse(data);
+		//console.log("Parsed", jcalData);
+		
+		var comp = new ICAL.Component(jcalData);
+
+		var vevent = comp.getFirstSubcomponent("vevent");
+		var summary = vevent.getFirstPropertyValue("summary");
+		$.each(comp.getAllSubcomponents("vevent"), function(idx, n){
+			var title = n.getFirstPropertyValue("summary");
+			var id = n.getFirstPropertyValue("uid");
+			var start = n.getFirstPropertyValue("dtstart").toJSDate();
+			var end = n.getFirstPropertyValue("dtend").toJSDate();
+			var url = n.getFirstPropertyValue("url");
+			
+			var event = {
+					id:id,
+					title:title,
+					url:url,
+					start:$.fullCalendar.moment(start),
+					end:$.fullCalendar.moment(end)
+				};
+			events.push(event);
+			//console.log("EVENT: ", event);
+			$.each(n.getAllProperties(), function(idx, i){
+				console.log(i.name);
+			});
+		});
+		
+		return events;
+    }
+
+
+	$(document).ready(function() {
+
+		$.get("/ical").done(function(data){
+			//console.log("Data", data);
+			var events = translateICalToFullcalendarJSON(data);
+			$('#calendar').fullCalendar({
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay'
+				},
+				editable: true,
+				eventLimit: true, // allow "more" link when too many events
+				events:events
+			});
+		});
+	});
+
+</script>
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+</style>
+</head>
+<body>
+	<div id='calendar'></div>
+
+    <div style="text-align:center;margin:20px;">
+    	<a href="/ical">iCal data feed</a> | <a href="/calendars">individual calendar URLs</a>
+   	</div>
+</body>
+</html>

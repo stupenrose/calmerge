@@ -1,0 +1,1 @@
+web:    java -jar target/calmerge-latest-SNAPSHOT.one-jar.jar
