@@ -10,7 +10,7 @@ Edit the list of urls in [CalMerge.scala](src/main/scala/us/penrose/calmerge/Cal
     mvn clean install
     java -jar target/calmerge-latest-SNAPSHOT.one-jar.jar
 
-open your browser to https://localhost:8080
+open your browser to http://localhost:8080
 
 # heroku deploy
 
